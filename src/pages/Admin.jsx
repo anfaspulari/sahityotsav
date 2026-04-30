@@ -2,16 +2,15 @@ import { useState, useEffect } from 'react'
 import { getEvents, addEvent, updateEvent, deleteEvent } from '../firebase/events'
 import { getResults, addResult, updateResult, deleteResult } from '../firebase/results'
 import { seedDemoData } from '../firebase/seed'
+import { SECTORS, CATEGORIES, STAGES } from '../constants'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin2026'
 
-const SECTORS = ['Feroke', 'Calicut', 'Kozhikode', 'Malappuram', 'Tirur']
-const CATEGORIES = ['Literature', 'Performing Arts', 'Music', 'Visual Arts']
 const TABS = ['Events', 'Results']
 
-const BLANK_EVENT = { title: '', category: 'Literature', sector: 'Feroke', date: '', time: '', venue: '' }
-const BLANK_RESULT = { eventTitle: '', rank: 1, participantName: '', sector: 'Feroke', school: '' }
+const BLANK_EVENT = { title: '', category: 'Literature', sector: '', stage: 'Main Stage', date: '', time: '', description: '' }
+const BLANK_RESULT = { eventTitle: '', rank: 1, participantName: '', sector: SECTORS[0], school: '' }
 
 function ConfirmModal({ message, onConfirm, onCancel }) {
   return (
@@ -65,13 +64,13 @@ function EventForm({ initial, onSave, onCancel, saving }) {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Sector *</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1">Stage *</label>
           <select
-            value={form.sector}
-            onChange={set('sector')}
+            value={form.stage}
+            onChange={set('stage')}
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
           >
-            {SECTORS.map((s) => <option key={s}>{s}</option>)}
+            {STAGES.map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
         <div>
@@ -93,11 +92,11 @@ function EventForm({ initial, onSave, onCancel, saving }) {
           />
         </div>
         <div className="sm:col-span-2">
-          <label className="block text-xs font-medium text-gray-500 mb-1">Venue</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
           <input
-            value={form.venue}
-            onChange={set('venue')}
-            placeholder="e.g. Main Stage"
+            value={form.description}
+            onChange={set('description')}
+            placeholder="Short description of the event"
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
           />
         </div>
@@ -443,7 +442,7 @@ export default function Admin() {
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 truncate">{ev.title}</p>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        {ev.category} · {ev.sector} · {ev.date} {ev.time} · {ev.venue}
+                        {ev.category} · {ev.stage} · {ev.date} {ev.time && `· ${ev.time}`}
                       </p>
                     </div>
                     <div className="flex gap-2 shrink-0">

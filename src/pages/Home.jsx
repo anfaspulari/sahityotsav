@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
 const STATS = [
-  { label: 'Events', value: '40+' },
-  { label: 'Sectors', value: '5' },
-  { label: 'Days', value: '3' },
-  { label: 'Categories', value: '4' },
+  { label: 'Events', value: '50+' },
+  { label: 'Sectors', value: '9' },
+  { label: 'Units', value: '61' },
+  { label: 'Stages', value: '8' },
 ]
 
 const HIGHLIGHTS = [
@@ -37,7 +37,7 @@ export default function Home() {
           <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto mb-4">
             Celebrating Literature, Arts & Culture across Feroke Division
           </p>
-          <p className="text-white/50 text-sm mb-10">March 15–17, 2026</p>
+          <p className="text-white/50 text-sm mb-10">March 15–16, 2026 · 9 Sectors · 61 Units</p>
 
           <div className="flex flex-wrap gap-3 justify-center">
             <Link

@@ -31,7 +31,7 @@ export async function deleteResult(id) {
   return deleteDoc(doc(db, COLLECTION, id))
 }
 
-// Compute sector scores: 1st=5pts, 2nd=3pts, 3rd=1pt
+// Points: 1st = 5, 2nd = 3, 3rd = 1
 export function computeLeaderboard(results) {
   const scores = {}
   for (const r of results) {
