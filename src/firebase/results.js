@@ -4,42 +4,36 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  getDocs,
-  query,
-  orderBy,
   serverTimestamp,
 } from 'firebase/firestore'
 import { db } from './config'
+import { RANK_POINTS } from '../constants'
 
-const COLLECTION = 'results'
-
-export async function getResults() {
-  const q = query(collection(db, COLLECTION), orderBy('eventTitle', 'asc'))
-  const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-}
+const COL = 'results'
 
 export async function addResult(data) {
-  return addDoc(collection(db, COLLECTION), { ...data, createdAt: serverTimestamp() })
+  return addDoc(collection(db, COL), {
+    ...data,
+    published: true,
+    createdAt: serverTimestamp(),
+  })
 }
 
 export async function updateResult(id, data) {
-  return updateDoc(doc(db, COLLECTION, id), data)
+  return updateDoc(doc(db, COL, id), data)
 }
 
 export async function deleteResult(id) {
-  return deleteDoc(doc(db, COLLECTION, id))
+  return deleteDoc(doc(db, COL, id))
 }
 
-// Points: 1st = 5, 2nd = 3, 3rd = 1
+// ─── Leaderboard computation ──────────────────────────────────────────────────
 export function computeLeaderboard(results) {
   const scores = {}
   for (const r of results) {
-    if (!r.sector) continue
-    if (!scores[r.sector]) scores[r.sector] = 0
-    if (r.rank === 1) scores[r.sector] += 5
-    else if (r.rank === 2) scores[r.sector] += 3
-    else if (r.rank === 3) scores[r.sector] += 1
+    if (!r.sector || !r.published) continue
+    const pts = RANK_POINTS[r.rank] || 0
+    scores[r.sector] = (scores[r.sector] || 0) + pts
   }
   return Object.entries(scores)
     .map(([sector, points]) => ({ sector, points }))

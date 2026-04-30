@@ -1,60 +1,78 @@
-const CATEGORY_COLORS = {
-  Literature: 'bg-blue-100 text-blue-700',
-  'Performing Arts': 'bg-pink-100 text-pink-700',
-  Music: 'bg-green-100 text-green-700',
-  'Visual Arts': 'bg-amber-100 text-amber-700',
-  General: 'bg-gray-100 text-gray-600',
-}
+import StatusBadge from './StatusBadge'
+import { CATEGORY_COLORS, STAGE_LABELS } from '../constants'
 
-export default function EventCard({ event }) {
-  const { title, category, stage, sector, date, time, description } = event
-  const color = CATEGORY_COLORS[category] || 'bg-gray-100 text-gray-600'
-  const formatted = date
-    ? new Date(date + 'T00:00:00').toLocaleDateString('en-IN', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-      })
+export default function EventCard({ event, onStatusChange }) {
+  const { title, category, stage, date, time, status, description, stageInCharge } = event
+  const catColor = CATEGORY_COLORS[category] || 'bg-gray-100 text-gray-600'
+  const stageLabel = STAGE_LABELS[stage] || stage
+
+  const formattedTime = time
+    ? new Date(`2000-01-01T${time}`).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
     : ''
 
+  const isActive = status === 'ongoing'
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow flex flex-col gap-3">
+    <div
+      className={`bg-white rounded-2xl shadow-sm border p-4 flex flex-col gap-3 transition-shadow hover:shadow-md ${
+        isActive ? 'border-green-200 ring-1 ring-green-200' : 'border-gray-100'
+      }`}
+    >
+      {/* Top row */}
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-semibold text-gray-900 text-base leading-snug">{title}</h3>
-        <span className={`text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${color}`}>
+        <h3 className="font-semibold text-gray-900 leading-snug text-sm">{title}</h3>
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${catColor}`}>
           {category}
         </span>
       </div>
 
       {description && (
-        <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">{description}</p>
+        <p className="text-xs text-gray-400 leading-relaxed line-clamp-2 -mt-1">{description}</p>
       )}
 
-      <div className="space-y-1.5 text-sm text-gray-500 mt-auto">
-        {(date || time) && (
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      {/* Meta */}
+      <div className="space-y-1 text-xs text-gray-500">
+        {formattedTime && (
+          <div className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>{formatted}{time ? ` · ${time}` : ''}</span>
+            {formattedTime}
           </div>
         )}
         {stage && (
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          <div className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            <span>{stage}</span>
+            <span className="truncate">{stage}</span>
           </div>
         )}
-        {sector && (
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        {stageInCharge && (
+          <div className="flex items-center gap-1.5 text-gray-400">
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span>{sector}</span>
+            {stageInCharge}
           </div>
+        )}
+      </div>
+
+      {/* Status + optional admin toggle */}
+      <div className="flex items-center justify-between mt-auto pt-1 border-t border-gray-50">
+        <StatusBadge status={status || 'upcoming'} size="xs" />
+        {onStatusChange && (
+          <select
+            value={status || 'upcoming'}
+            onChange={(e) => { e.stopPropagation(); onStatusChange(event.id, e.target.value) }}
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs border border-gray-200 rounded-lg px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-primary-300 cursor-pointer"
+          >
+            <option value="upcoming">Upcoming</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="delayed">Delayed</option>
+            <option value="completed">Completed</option>
+          </select>
         )}
       </div>
     </div>
