@@ -4,10 +4,10 @@ import { computeLeaderboard } from '../firebase/results'
 import { SECTORS } from '../constants'
 
 const HIGHLIGHTS = [
-  { icon: '📖', title: 'Literature', desc: 'Kavitha, Story Writing, Essay, Debate & more', color: 'bg-blue-50 border-blue-100' },
-  { icon: '🎭', title: 'Performing Arts', desc: 'Oppana, Margamkali, Mono Act, Skit & more', color: 'bg-pink-50 border-pink-100' },
-  { icon: '🎵', title: 'Music', desc: 'Mappilappattu, Qaseedah, Hamd & Naat & more', color: 'bg-green-50 border-green-100' },
-  { icon: '🎨', title: 'Visual Arts', desc: 'Arabic Calligraphy, Painting, Poster & more', color: 'bg-amber-50 border-amber-100' },
+  { icon: '🎒', title: 'Lower & Upper Primary', desc: 'Speech, Storytelling, Drawing, Quiz, Reading & more', color: 'bg-sky-50 border-sky-100' },
+  { icon: '🏫', title: 'High School & Higher Secondary', desc: 'Essay, Poem, Calligraphy, Debate, Digital Painting & more', color: 'bg-violet-50 border-violet-100' },
+  { icon: '📚', title: 'Junior & Senior', desc: 'Arabic Translation, Hadith, Podcast, Magazine, Reel Making & more', color: 'bg-pink-50 border-pink-100' },
+  { icon: '🎓', title: 'General, Campus & Girls', desc: 'Daff, Arabana, Qawwali, AI Prompting, Ideathon & more', color: 'bg-amber-50 border-amber-100' },
 ]
 
 const STAGE_OVERVIEW = [
@@ -62,9 +62,9 @@ export default function Home() {
           </h1>
 
           <p className="text-white/70 text-lg max-w-xl mx-auto mb-3">
-            The Division Level Literary & Arts Festival — where 9 sectors compete across 120+ events
+            The Division Level Literary &amp; Arts Festival — 9 sectors, 10 categories, 180+ events
           </p>
-          <p className="text-white/40 text-sm mb-10">June 28 & 29, 2026 · 9 Sectors · 61 Units · 8 Stages</p>
+          <p className="text-white/40 text-sm mb-10">June 28 &amp; 29, 2026 · 9 Sectors · 61 Units · 8 Stages</p>
 
           <div className="flex flex-wrap gap-3 justify-center">
             <Link to="/schedule" className="bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-primary-50 transition-colors shadow-lg">
@@ -82,7 +82,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-5">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div>
-              <p className="text-2xl font-extrabold text-primary-700">120+</p>
+              <p className="text-2xl font-extrabold text-primary-700">180+</p>
               <p className="text-xs text-gray-500 mt-0.5">Events</p>
             </div>
             <div>
