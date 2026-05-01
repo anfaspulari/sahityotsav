@@ -10,21 +10,21 @@ const ALL = 'All'
 const VIEWS = ['Stage View', 'Full Schedule']
 
 const DAY_LABELS = {
-  '2026-06-28': 'Day 1 – Sunday, 28 June 2026',
-  '2026-06-29': 'Day 2 – Monday, 29 June 2026',
+  '2026-06-28': 'Day 1 – Saturday, 28 June 2026',
+  '2026-06-29': 'Day 2 – Sunday, 29 June 2026',
 }
 
 export default function Schedule() {
   const { events, loading, error } = useEvents()
 
-  const [view, setView] = useState(0)          // 0=Stage View, 1=Full Schedule
+  const [view, setView] = useState(0)
   const [filterDay, setFilterDay] = useState(ALL)
   const [filterStage, setFilterStage] = useState(ALL)
   const [filterCat, setFilterCat] = useState(ALL)
   const [filterStatus, setFilterStatus] = useState(ALL)
+  const [showGirlsOnly, setShowGirlsOnly] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
 
-  // Live counts
   const ongoing = events.filter((e) => e.status === 'ongoing').length
   const completed = events.filter((e) => e.status === 'completed').length
 
@@ -36,9 +36,10 @@ export default function Schedule() {
       if (filterStage !== ALL && e.stage !== filterStage) return false
       if (filterCat !== ALL && e.category !== filterCat) return false
       if (filterStatus !== ALL && (e.status || 'upcoming') !== filterStatus) return false
+      if (showGirlsOnly && !e.isGirls) return false
       return true
     })
-  }, [events, filterDay, filterStage, filterCat, filterStatus])
+  }, [events, filterDay, filterStage, filterCat, filterStatus, showGirlsOnly])
 
   const handleStatusChange = async (id, newStatus) => {
     await updateEventStatus(id, newStatus)
@@ -46,9 +47,9 @@ export default function Schedule() {
   }
 
   const clearFilters = () => {
-    setFilterDay(ALL); setFilterStage(ALL); setFilterCat(ALL); setFilterStatus(ALL)
+    setFilterDay(ALL); setFilterStage(ALL); setFilterCat(ALL); setFilterStatus(ALL); setShowGirlsOnly(false)
   }
-  const hasFilters = filterDay !== ALL || filterStage !== ALL || filterCat !== ALL || filterStatus !== ALL
+  const hasFilters = filterDay !== ALL || filterStage !== ALL || filterCat !== ALL || filterStatus !== ALL || showGirlsOnly
 
   // ── Stage View grouping ────────────────────────────────────────────────────
   const byStage = useMemo(() => {
@@ -194,9 +195,24 @@ export default function Schedule() {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 pt-1">
-          Showing <span className="font-semibold text-gray-700">{filtered.length}</span> of {events.length} events
-        </p>
+        {/* Girls toggle */}
+        <div className="flex items-center justify-between pt-1 border-t border-gray-50">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <div
+              onClick={() => setShowGirlsOnly(!showGirlsOnly)}
+              className={`w-9 h-5 rounded-full transition-colors relative ${showGirlsOnly ? 'bg-fuchsia-500' : 'bg-gray-200'}`}
+            >
+              <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${showGirlsOnly ? 'translate-x-4' : ''}`} />
+            </div>
+            <span className="text-xs font-medium text-gray-600">Girls events only</span>
+            <span className="text-xs text-gray-400">
+              ({events.filter(e => e.isGirls || ['Campus Girls','Parallel Campus Girls'].includes(e.category)).length} events)
+            </span>
+          </label>
+          <p className="text-xs text-gray-400">
+            Showing <span className="font-semibold text-gray-700">{filtered.length}</span> of {events.length}
+          </p>
+        </div>
       </div>
 
       {/* Content */}

@@ -2,7 +2,7 @@ import StatusBadge from './StatusBadge'
 import { CATEGORY_COLORS, STAGE_LABELS } from '../constants'
 
 export default function EventCard({ event, onStatusChange }) {
-  const { title, category, stage, date, time, status, description, stageInCharge } = event
+  const { title, category, stage, date, time, status, description, stageInCharge, isGirls, duration } = event
   const catColor = CATEGORY_COLORS[category] || 'bg-gray-100 text-gray-600'
   const stageLabel = STAGE_LABELS[stage] || stage
 
@@ -21,13 +21,24 @@ export default function EventCard({ event, onStatusChange }) {
       {/* Top row */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-gray-900 leading-snug text-sm">{title}</h3>
-        <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${catColor}`}>
-          {category}
-        </span>
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${catColor}`}>
+            {category}
+          </span>
+          {isGirls && (
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-fuchsia-100 text-fuchsia-700">
+              Girls
+            </span>
+          )}
+        </div>
       </div>
 
-      {description && (
-        <p className="text-xs text-gray-400 leading-relaxed line-clamp-2 -mt-1">{description}</p>
+      {(description || duration) && (
+        <p className="text-xs text-gray-400 leading-relaxed line-clamp-2 -mt-1">
+          {duration && <span className="font-medium text-gray-500">{duration}</span>}
+          {duration && description ? ' · ' : ''}
+          {description}
+        </p>
       )}
 
       {/* Meta */}
